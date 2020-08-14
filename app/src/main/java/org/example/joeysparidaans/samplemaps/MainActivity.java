@@ -9,20 +9,40 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
 
-    private Button button;
+    private Button btnNavigation, btnGeo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.button);
-        button.setOnClickListener(v -> startNavigation());
+        btnNavigation = findViewById(R.id.btnNavigation);
+        btnNavigation.setOnClickListener(v -> startNavigation());
+
+        btnGeo = findViewById(R.id.btnGeo);
+        btnGeo.setOnClickListener(v -> startGeoMaps());
     }
 
     private void startNavigation() {
         //See images folder for screenshot on my Samsung Galaxy Note 10+
-        Uri gmmIntentUri = Uri.parse("google.navigation:q=Gartenstrasse 33+41372+Niederkruechten");
+        Uri gmmIntentUri = new Uri.Builder()
+                .scheme("google.navigation")
+                .path("0,0")
+                //Note that this is the only address we found discrepancies in results, other addresses have worked as intended so far
+                .appendQueryParameter("q", "Gartenstrasse 33+41372+Niederkruechten")
+                .build();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
+
+    private void startGeoMaps() {
+        //See images folder for screenshot on my Samsung Galaxy Note 10+
+        Uri gmmIntentUri = new Uri.Builder()
+                .scheme("geo")
+                .path("0,0")
+                .appendQueryParameter("q", "Gartenstrasse 33+41372+Niederkruechten")
+                .build();
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
